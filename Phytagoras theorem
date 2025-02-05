@@ -1,0 +1,39 @@
+from manim import *
+
+class PythagoreanTheorem(Scene):
+    def construct(self):
+        # Define triangle vertices
+        A = np.array([-3, -1, 0])
+        B = np.array([1, -1, 0])
+        C = np.array([-3, 2, 0])
+
+        # Create the triangle
+        triangle = Polygon(A, B, C, color=WHITE)
+
+        # Create squares on each side
+        square_a = Polygon(A, C, C + (B - A), A + (B - A), color=BLUE).set_fill(BLUE, opacity=0.5)
+        square_b = Polygon(B, A, A + (C - B), B + (C - B), color=GREEN).set_fill(GREEN, opacity=0.5)
+        square_c = Polygon(B, C, C + (C - A), B + (C - A), color=RED).set_fill(RED, opacity=0.5)
+
+        # Add elements to the scene
+        self.play(Create(triangle))
+        self.wait(1)
+
+        # Show squares
+        self.play(Create(square_a), Create(square_b))
+        self.wait(1)
+        self.play(Create(square_c))
+        self.wait(2)
+
+        # Rearrangement Animation
+        square_a_moving = square_a.copy()
+        square_b_moving = square_b.copy()
+        
+        self.play(square_a_moving.animate.move_to(square_c.get_center() + LEFT * 1.5),
+                  square_b_moving.animate.move_to(square_c.get_center() + UP * 1.5))
+        self.wait(2)
+
+        # Final Message
+        theorem_text = MathTex("a^2 + b^2 = c^2").scale(1.5).to_edge(UP)
+        self.play(Write(theorem_text))
+        self.wait(3)
